@@ -1,0 +1,111 @@
+You are a senior Go engineer validating the `llm-gateway` server startup.
+
+main.go is already fully implemented. Now run the server and verify it starts correctly.
+
+## Step 1: Verify .env file is complete
+
+Make sure .env contains all required values. It should look like this:
+
+```env
+# Server
+PORT=8081
+
+# Database
+POSTGRES_DSN=postgres://postgres:postgres@localhost:5432/llm_gateway?sslmode=disable
+
+# Cache
+REDIS_ADDR=localhost:6379
+
+# Providers — fill in your real API keys
+GEMINI_API_KEY=<your-gemini-api-key>
+OPENAI_API_KEY=<your-openai-api-key>
+ANTHROPIC_API_KEY=
+
+# Observability
+OTEL_EXPORTER_TYPE=stdout
+OTEL_EXPORTER_ENDPOINT=localhost:4317
+
+# Rate Limiting
+DEFAULT_RATE_LIMIT_TPM=100000
+```
+
+Important notes:
+- ANTHROPIC_API_KEY can be empty — Claude will use mock mode
+- GEMINI_API_KEY and OPENAI_API_KEY must be real keys for end-to-end testing
+- Do NOT commit .env to git — verify .env is in .gitignore
+
+## Step 2: Run migrations
+
+```bash
+make migrate
+```
+
+Expected output:
+```
+Running migrations...
+Applying migrations/001_create_api_keys.sql...
+Applying migrations/002_create_usage_logs.sql...
+```
+
+If migrations already applied, postgres will skip with "already exists" — this is fine.
+
+## Step 3: Start server with seed
+
+Open a terminal and run:
+```bash
+RUN_SEED=true go run cmd/gateway/main.go
+```
+
+Expected log output (order may vary slightly):
+```
+PostgreSQL connected
+Redis connected
+[Seeder] Test API key created successfully
+[Seeder] Key: test-api-key-12345
+[Seeder] TenantID: tenant-test-001
+LLM Gateway starting on port 8081
+```
+
+If seeder says "API key may already exist, skipping" — that is fine, key was already seeded before.
+
+Server must start without any panic or fatal error.
+
+## Step 4: Health check (run in a NEW terminal, keep server running)
+
+```bash
+curl -s http://localhost:8081/healthz | jq .
+```
+
+Expected response:
+```json
+{
+  "status": "ok",
+  "service": "llm-gateway"
+}
+```
+
+## Step 5: Verify 401 on protected route without auth
+
+```bash
+curl -s -o /dev/null -w "%{http_code}" \
+  -X POST http://localhost:8081/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"gemini-1.5-flash","messages":[{"role":"user","content":"hello"}]}'
+```
+
+Expected output: `401`
+
+## Step 6: Verify 501 on placeholder job route
+
+```bash
+curl -s -X POST http://localhost:8081/v1/jobs \
+  -H "Authorization: Bearer test-api-key-12345" \
+  -H "Content-Type: application/json" | jq .
+```
+
+Expected:
+```json
+{"error": "async jobs coming in phase 2"}
+```
+
+Show full output of all steps including server logs from the server terminal.
