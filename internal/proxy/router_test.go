@@ -82,7 +82,7 @@ func TestRoute_CircuitBreakerOpen(t *testing.T) {
 	
 	// Trip p1
 	for i := 0; i < 3; i++ {
-		router.Execute(context.Background(), &provider.Request{}, p1)
+		_, _ = router.Execute(context.Background(), &provider.Request{}, p1)
 	}
 	
 	// p1 should now be excluded even if cheaper
@@ -101,7 +101,7 @@ func TestRoute_AllProvidersDown(t *testing.T) {
 	router := NewRouter([]provider.Provider{p1})
 	
 	for i := 0; i < 3; i++ {
-		router.Execute(context.Background(), &provider.Request{}, p1)
+		_, _ = router.Execute(context.Background(), &provider.Request{}, p1)
 	}
 	
 	_, err := router.Route(context.Background(), &provider.Request{})

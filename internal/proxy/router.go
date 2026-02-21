@@ -91,7 +91,7 @@ func (r *Router) ExecuteStream(ctx context.Context, req *provider.Request, p pro
 
 	origCh, err := p.CompleteStream(ctx, req)
 	if err != nil {
-		cb.Execute(func() (interface{}, error) {
+		_, _ = cb.Execute(func() (interface{}, error) {
 			return nil, err
 		})
 		return nil, err
@@ -102,7 +102,7 @@ func (r *Router) ExecuteStream(ctx context.Context, req *provider.Request, p pro
 		defer close(wrappedCh)
 		for chunk := range origCh {
 			if chunk.Err != nil {
-				cb.Execute(func() (interface{}, error) {
+				_, _ = cb.Execute(func() (interface{}, error) {
 					return nil, chunk.Err
 				})
 			}
