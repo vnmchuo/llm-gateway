@@ -110,7 +110,7 @@ func NewMiddleware(store Store, cache *redis.Client) Middleware {
 	}
 }
 
-// Helpers to extract from context
+// GetTenantID Helpers to extract from context
 func GetTenantID(ctx context.Context) string {
 	if id, ok := ctx.Value(tenantIDKey).(string); ok {
 		return id
@@ -132,7 +132,7 @@ func GetRequestID(ctx context.Context) string {
 	return ""
 }
 
-// Helpers for testing
+// WithTenantID Helpers for testing
 func WithTenantID(ctx context.Context, tenantID string) context.Context {
 	return context.WithValue(ctx, tenantIDKey, tenantID)
 }
