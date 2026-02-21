@@ -27,7 +27,7 @@ func TestComplete_Mock(t *testing.T) {
 			Model: "gpt-4o-mini",
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(resp)
+		_ = json.NewEncoder(w).Encode(resp)
 	}))
 	defer server.Close()
 

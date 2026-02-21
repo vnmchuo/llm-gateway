@@ -86,7 +86,7 @@ func TestHandleComplete_Unauthorized(t *testing.T) {
 	}
 
 	var resp map[string]string
-	json.Unmarshal(w.Body.Bytes(), &resp)
+	_ = json.Unmarshal(w.Body.Bytes(), &resp)
 	if resp["error"] != "unauthorized" {
 		t.Errorf("Expected unauthorized error, got %v", resp["error"])
 	}
@@ -106,7 +106,7 @@ func TestHandleComplete_InvalidBody(t *testing.T) {
 	}
 
 	var resp map[string]string
-	json.Unmarshal(w.Body.Bytes(), &resp)
+	_ = json.Unmarshal(w.Body.Bytes(), &resp)
 	if resp["error"] != "invalid request body" {
 		t.Errorf("Expected invalid request body error, got %v", resp["error"])
 	}
@@ -126,7 +126,7 @@ func TestHandleComplete_RateLimited(t *testing.T) {
 	}
 
 	var resp map[string]string
-	json.Unmarshal(w.Body.Bytes(), &resp)
+	_ = json.Unmarshal(w.Body.Bytes(), &resp)
 	if resp["error"] != "rate limit exceeded" {
 		t.Errorf("Expected rate limit exceeded error, got %v", resp["error"])
 	}
@@ -150,7 +150,7 @@ func TestHandleComplete_ProviderUnavailable(t *testing.T) {
 	}
 
 	var resp map[string]string
-	json.Unmarshal(w.Body.Bytes(), &resp)
+	_ = json.Unmarshal(w.Body.Bytes(), &resp)
 	if resp["error"] == "" {
 		t.Errorf("Expected error message, got empty")
 	}
@@ -365,7 +365,7 @@ func TestHandleUsage_Success(t *testing.T) {
 	}
 
 	var resp map[string]interface{}
-	json.Unmarshal(w.Body.Bytes(), &resp)
+	_ = json.Unmarshal(w.Body.Bytes(), &resp)
 
 	if resp["total_requests"].(float64) != 2 {
 		t.Errorf("Expected total_requests == 2, got %v", resp["total_requests"])
@@ -392,7 +392,7 @@ func TestHandleUsage_DefaultDates(t *testing.T) {
 	}
 
 	var resp map[string]interface{}
-	json.Unmarshal(w.Body.Bytes(), &resp)
+	_ = json.Unmarshal(w.Body.Bytes(), &resp)
 
 	if resp["from"] == "" || resp["to"] == "" {
 		t.Errorf("Expected from/to dates in response")

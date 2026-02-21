@@ -26,7 +26,7 @@ func TestComplete_Mock(t *testing.T) {
 			Model: "claude-3-5-sonnet-20241022",
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(resp)
+		_ = json.NewEncoder(w).Encode(resp)
 	}))
 	defer server.Close()
 
@@ -145,14 +145,14 @@ func TestSystemMessageExtraction(t *testing.T) {
 	var capturedReq claudeRequest
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		body, _ := io.ReadAll(r.Body)
-		json.Unmarshal(body, &capturedReq)
+		_ = json.Unmarshal(body, &capturedReq)
 		
 		resp := claudeResponse{
 			ID: "msg_123",
 			Content: []claudeContent{{Type: "text", Text: "ok"}},
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(resp)
+		_ = json.NewEncoder(w).Encode(resp)
 	}))
 	defer server.Close()
 
