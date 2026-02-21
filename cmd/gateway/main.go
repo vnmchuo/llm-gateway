@@ -103,7 +103,7 @@ func main() {
     r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Content-Type", "application/json")
         w.WriteHeader(http.StatusOK)
-        w.Write([]byte(`{"status":"ok","service":"llm-gateway"}`))
+        _, _ = w.Write([]byte(`{"status":"ok","service":"llm-gateway"}`))
     })
 
     // Protected routes
@@ -118,12 +118,12 @@ func main() {
     r.Post("/v1/jobs", func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Content-Type", "application/json")
         w.WriteHeader(http.StatusNotImplemented)
-        w.Write([]byte(`{"error":"async jobs coming in phase 2"}`))
+        _, _ = w.Write([]byte(`{"error":"async jobs coming in phase 2"}`))
     })
     r.Get("/v1/jobs/{id}", func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Content-Type", "application/json")
         w.WriteHeader(http.StatusNotImplemented)
-        w.Write([]byte(`{"error":"async jobs coming in phase 2"}`))
+        _, _ = w.Write([]byte(`{"error":"async jobs coming in phase 2"}`))
     })
 
     // 13. Graceful shutdown

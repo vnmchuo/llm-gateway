@@ -43,7 +43,7 @@ func (h *Handler) HandleComplete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadGateway)
-		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 		return
 	}
 
@@ -69,7 +69,7 @@ func (h *Handler) HandleComplete(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	_ = json.NewEncoder(w).Encode(map[string]interface{}{
 		"id":       respID,
 		"object":   "chat.completion",
 		"model":    response.Model,
@@ -102,7 +102,7 @@ func (h *Handler) HandleCompleteStream(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadGateway)
-		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 		return
 	}
 
@@ -151,7 +151,7 @@ func (h *Handler) prepare(w http.ResponseWriter, r *http.Request) (string, strin
 	if tenantID == "" {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(map[string]string{"error": "unauthorized"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": "unauthorized"})
 		return "", "", nil, nil, fmt.Errorf("unauthorized")
 	}
 
@@ -164,7 +164,7 @@ func (h *Handler) prepare(w http.ResponseWriter, r *http.Request) (string, strin
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]string{"error": "invalid request body"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": "invalid request body"})
 		return "", "", nil, nil, err
 	}
 
@@ -186,7 +186,7 @@ func (h *Handler) prepare(w http.ResponseWriter, r *http.Request) (string, strin
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Retry-After", "60s")
 		w.WriteHeader(http.StatusTooManyRequests)
-		json.NewEncoder(w).Encode(map[string]string{
+		_ = json.NewEncoder(w).Encode(map[string]string{
 			"error":       "rate limit exceeded",
 			"retry_after": "60s",
 		})
@@ -197,7 +197,7 @@ func (h *Handler) prepare(w http.ResponseWriter, r *http.Request) (string, strin
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusServiceUnavailable)
-		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 		return "", "", nil, nil, err
 	}
 
@@ -210,7 +210,7 @@ func (h *Handler) HandleUsage(w http.ResponseWriter, r *http.Request) {
 	if tenantID == "" {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(map[string]string{"error": "unauthorized"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": "unauthorized"})
 		return
 	}
 
@@ -228,7 +228,7 @@ func (h *Handler) HandleUsage(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{"error": "invalid 'from' date format (use RFC3339)"})
+			_ = json.NewEncoder(w).Encode(map[string]string{"error": "invalid 'from' date format (use RFC3339)"})
 			return
 		}
 	}
@@ -239,7 +239,7 @@ func (h *Handler) HandleUsage(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(map[string]string{"error": "invalid 'to' date format (use RFC3339)"})
+			_ = json.NewEncoder(w).Encode(map[string]string{"error": "invalid 'to' date format (use RFC3339)"})
 			return
 		}
 	}
@@ -248,7 +248,7 @@ func (h *Handler) HandleUsage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 		return
 	}
 
@@ -256,13 +256,13 @@ func (h *Handler) HandleUsage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	_ = json.NewEncoder(w).Encode(map[string]interface{}{
 		"tenant_id":      tenantID,
 		"total_requests": len(logs),
 		"total_cost_usd": totalCost,
