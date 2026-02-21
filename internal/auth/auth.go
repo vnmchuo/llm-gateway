@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -85,8 +86,7 @@ func NewMiddleware(store Store, cache *redis.Client) Middleware {
 				next.ServeHTTP(w, r.WithContext(ctx))
 				return
 			} else if err != redis.Nil {
-				// Redis error (non-fatal, fallback to store)
-				// Log error here in real application
+				log.Printf("auth: redis error: %v", err)
 			}
 
 			// Cache miss or error: lookup in store
