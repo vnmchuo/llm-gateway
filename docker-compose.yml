@@ -7,8 +7,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      volumes:
+        - postgres_data:/var/lib/postgresql
     restart: ${RESTART_POLICY:-unless-stopped}
 
   redis:
@@ -26,3 +26,9 @@ services:
 
 volumes:
   postgres_data:
+
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      isolate: "false"

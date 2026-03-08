@@ -1,4 +1,4 @@
-POSTGRES_CONTAINER ?= llm-gateway-postgres-1
+POSTGRES_CONTAINER ?= llm-gateway_postgres_1
 CONTAINER_TOOL ?= podman
 
 ifeq ($(shell which podman 2>/dev/null),)
